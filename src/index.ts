@@ -1,39 +1,5 @@
-// ==UserScript==
-// @name         搜索引擎切换
-// @namespace    https://ivanli.cc/
-// @version      0.5
-// @description
-// @author       Ivan Li
-// @icon         data:image/svg+xml;base64,PHN2ZyBzdHJva2U9ImN1cnJlbnRDb2xvciIgZmlsbD0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgaGVpZ2h0PSIxZW0iIHdpZHRoPSIxZW0iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjIiIGQ9Ik0xNSwxNiBMMjEsMjIgTDE1LDE2IFogTTEwLDE4IEMxMy44NjU5OTMyLDE4IDE3LDE0Ljg2NTk5MzIgMTcsMTEgQzE3LDcuMTM0MDA2NzUgMTMuODY1OTkzMiw0IDEwLDQgQzYuMTM0MDA2NzUsNCAzLDcuMTM0MDA2NzUgMywxMSBDMywxNC44NjU5OTMyIDYuMTM0MDA2NzUsMTggMTAsMTggWiBNMjAsMSBMMjAsNyBNMTcsNCBMMjMsNCI+PC9wYXRoPjwvc3ZnPg==
-
-// @match        *://www.baidu.com/*
-// @match        *://www.google.com/*
-// @match        *://www.google.com.hk/*
-// @match        *://www.bing.com/*
-// @match        *://cn.bing.com/*
-// @match        *://bing.com/*
-// @match        *://www.sogou.com/*
-// @match        *://duckduckgo.com/*
-// @match        *://yandex.com/*
-// @match        *://www.douyin.com/*
-// @match        *://www.zhihu.com/*
-// @match        *://search.bilibili.com/*
-// @match        *://search.cnki.com.cn/*
-
-// @grant        unsafeWindow
-// @grant        GM_getValue
-// @grant        GM_setValue
-// @grant        GM_log
-// @grant        GM_addElement
-// @run-at       document-end
-
-// @license     MIT
-// ==/UserScript==
-
-// ------------------------------------------------------
-
+import { GM_log } from "$";
 import twText from "./index.css?inline";
-// import twText from "../../dist/output.css?inline";
 
 ("use strict");
 
@@ -140,9 +106,9 @@ customElements.define(
       twStyle.textContent = twText;
       shadow.appendChild(twStyle);
 
-      createIndexPanel.apply(shadow);
+      createIndexPanel(shadow);
 
-      registerJump.apply(shadow);
+      registerJump(shadow);
     }
   }
 );
@@ -154,11 +120,11 @@ const rootElement = document.body.appendChild(
 console.log(rootElement);
 
 // Create Panel
-function createIndexPanel() {
+function createIndexPanel(shadow: ShadowRoot) {
   // this = EngineSwitch Custom Element Instance
 
   // index panel
-  const indexPanel = this.appendChild(document.createElement("div"));
+  const indexPanel = shadow.appendChild(document.createElement("div"));
   indexPanel.setAttribute("id", "ivan_search-engine-switch");
   indexPanel.className =
     "fixed left-4 top-1/3 -translate-y-1/2 bg-sky-100/50 backdrop-blur text-sky-700 rounded shadow-lg flex flex-col";
@@ -214,8 +180,10 @@ function createIndexPanel() {
 }
 
 // Register Event Handlers for Jump
-function registerJump() {
-  let linkElems = this.querySelectorAll(".switch-search-engine");
+function registerJump(shadow: ShadowRoot) {
+  const linkElems = shadow.querySelectorAll<HTMLElement>(
+    ".switch-search-engine"
+  );
   for (const elem of linkElems) {
     elem.addEventListener("click", function () {
       const currUrl = new URL(window.location.href);
@@ -234,7 +202,7 @@ function registerJump() {
       GM_log(`match words: "${words}", url: ${currUrl}`);
 
       const urlPrefix = elem.dataset.url;
-      elem.setAttribute("href", urlPrefix + words);
+      elem.setAttribute("href", `${urlPrefix}${words}`);
     });
   }
 }
