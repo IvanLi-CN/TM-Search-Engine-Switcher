@@ -5,7 +5,7 @@
 源代码：[Github](https://github.com/IvanLi-CN/TM-Search-Engine-Switcher)
 安装地址：[Greasy Fork](https://greasyfork.org/zh-CN/scripts/465246) / [Github](https://github.com/IvanLi-CN/TM-Search-Engine-Switcher/raw/main/dist/tm-search-engine-switch.user.js)
 
-![截图](docs/asserts/img-1.png)
+![截图](https://github.com/IvanLi-CN/TM-Search-Engine-Switcher/blob/5cfe15d3726875aa7384609ad9a36a1ebfc7e5f7/docs/asserts/img-1.png)
 
 ## 使用
 
