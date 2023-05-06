@@ -127,8 +127,13 @@ function createIndexPanel(shadow: ShadowRoot) {
   const indexPanel = shadow.appendChild(document.createElement("div"));
   indexPanel.setAttribute("id", "ivan_search-engine-switch");
   indexPanel.className =
-    "fixed left-4 top-1/3 -translate-y-1/2 bg-sky-100/50 backdrop-blur text-sky-700 rounded shadow-lg flex flex-col";
+    "fixed -left-16 top-1/3 -translate-y-1/2 bg-sky-100/50 backdrop-blur text-sky-700 rounded shadow-lg flex flex-col transition-all";
   indexPanel.style.zIndex = "999999";
+
+  setTimeout(() => {
+    indexPanel.classList.remove("-left-16");
+    indexPanel.classList.add("left-4");
+  });
 
   // engine list
   const ol = indexPanel.appendChild(document.createElement("ol"));
@@ -138,7 +143,7 @@ function createIndexPanel(shadow: ShadowRoot) {
     const engine = searchEngines[i];
     if (true) {
       const li = ol.appendChild(document.createElement("li"));
-      li.className = "px-4 py-2 hover:bg-sky-100 transition";
+      li.className = "px-4 py-2 hover:bg-sky-100 transition cursor-pointer";
 
       const a = li.appendChild(document.createElement("a"));
       a.className = `switch-search-engine ${engine.id} block text-inherit no-underline`;
@@ -151,13 +156,13 @@ function createIndexPanel(shadow: ShadowRoot) {
   // fold
   const foldBtn = indexPanel.appendChild(document.createElement("button"));
   foldBtn.className =
-    "absolute -right-2 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full shadow-lg bg-sky-700/50 backdrop-blur text-sky-100 flex items-center justify-center text-xl";
+    "absolute -right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full shadow-lg bg-sky-700/50 backdrop-blur text-sky-100 flex items-center justify-center text-xl";
 
   const foldBtnIcon = foldBtn.appendChild(document.createElement("span"));
   foldBtnIcon.className = " pr-0.5 transition";
   foldBtnIcon.innerHTML = `<svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16.2426 6.34317L14.8284 4.92896L7.75739 12L14.8285 19.0711L16.2427 17.6569L10.5858 12L16.2426 6.34317Z" fill="currentColor"></path></svg>`;
 
-  foldBtn.onclick = function (ev) {
+  foldBtn.onclick = function () {
     const folded = foldBtnIcon.classList.contains("rotate-180");
     if (folded) {
       indexPanel.classList.add("left-4");

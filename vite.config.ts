@@ -28,7 +28,7 @@ export default defineConfig({
         author: "Ivan Li",
         description:
           "A userscript to switch search engine with current keywords.",
-        version: "1.0.0",
+        version: "1.0.1",
       },
     }),
   ],
