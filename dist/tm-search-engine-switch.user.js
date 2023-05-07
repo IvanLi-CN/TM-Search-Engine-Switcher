@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         搜索引擎切换 - Search Engine Switcher
 // @namespace    https://ivanli.cc/
-// @version      1.1.0
+// @version      1.1.1
 // @author       Ivan Li
 // @description  A userscript to switch search engine with current keywords.
 // @license      MIT
@@ -125,86 +125,124 @@
         const twStyle = document.createElement("style");
         twStyle.textContent = twText;
         shadow.appendChild(twStyle);
-        createIndexPanel(shadow);
+        function createIndexPanel(shadow2) {
+          const indexPanel2 = shadow2.appendChild(document.createElement("div"));
+          indexPanel2.setAttribute("id", "ivan_search-engine-switch");
+          indexPanel2.className = "fixed -left-16 top-1/3 -translate-y-1/2 rounded shadow-lg flex flex-col transition-all bg-sky-100/50 backdrop-blur text-sky-700 dark:bg-sky-800/10 dark:text-sky-500";
+          indexPanel2.style.zIndex = "999999";
+          setTimeout(() => {
+            indexPanel2.classList.remove("-left-16");
+            indexPanel2.classList.add("left-4");
+          });
+          const ol = indexPanel2.appendChild(document.createElement("ol"));
+          ol.className = "divide-dotted divide-y divide-sky-300";
+          for (let i = 0; i < searchEngines.length; i++) {
+            const engine = searchEngines[i];
+            {
+              const li = ol.appendChild(document.createElement("li"));
+              li.className = "hover:bg-sky-100 dark:hover:bg-sky-800/20 transition";
+              const a = li.appendChild(document.createElement("a"));
+              a.className = `block px-4 py-2 switch-search-engine ${engine.id} block text-inherit no-underline`;
+              a.dataset.url = engine.url;
+              a.href = "javascript::void(0);";
+              a.text = engine.name;
+            }
+          }
+          const foldBtn = indexPanel2.appendChild(
+            document.createElement("button")
+          );
+          foldBtn.className = "absolute -right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full shadow-lg bg-sky-700/50 backdrop-blur text-sky-100 flex items-center justify-center text-xl";
+          const foldBtnIcon2 = foldBtn.appendChild(document.createElement("span"));
+          foldBtnIcon2.className = " pr-0.5 transition";
+          foldBtnIcon2.innerHTML = `<svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16.2426 6.34317L14.8284 4.92896L7.75739 12L14.8285 19.0711L16.2427 17.6569L10.5858 12L16.2426 6.34317Z" fill="currentColor"></path></svg>`;
+          foldBtn.onclick = function() {
+            const folded = foldBtnIcon2.classList.contains("rotate-180");
+            if (folded) {
+              foldPanel();
+            } else {
+              unfoldPanel();
+            }
+          };
+          return {
+            indexPanel: indexPanel2,
+            foldBtnIcon: foldBtnIcon2,
+            foldBtn
+          };
+        }
+        const { indexPanel, foldBtnIcon } = createIndexPanel(shadow);
+        function unfoldPanel() {
+          indexPanel.classList.add("left-4");
+          foldBtnIcon.classList.remove("rotate-180");
+          indexPanel.classList.remove("opacity-50");
+          indexPanel.classList.remove("hover:opacity-100");
+          indexPanel.style.left = "";
+        }
+        function foldPanel() {
+          indexPanel.classList.remove("left-4");
+          indexPanel.classList.add("opacity-50");
+          indexPanel.classList.add("hover:opacity-100");
+          foldBtnIcon.classList.add("rotate-180");
+          const rightBoardPosX = `-${indexPanel.offsetLeft + indexPanel.offsetWidth - 4}px`;
+          indexPanel.style.left = rightBoardPosX;
+        }
+        function registerJump(shadow2) {
+          const linkElems = shadow2.querySelectorAll(
+            ".switch-search-engine"
+          );
+          for (const elem of linkElems) {
+            elem.addEventListener("click", function() {
+              const currUrl = new URL(window.location.href);
+              const currSearchEngine = searchEngines.find(
+                (it) => {
+                  var _a;
+                  return (_a = it.regUrl) == null ? void 0 : _a.test(currUrl.toString());
+                }
+              );
+              if (!currSearchEngine) {
+                _GM_log(
+                  `The current page does not match the preset search engine. url: ${currUrl}`
+                );
+                return;
+              }
+              const words = currSearchEngine.getSearchWord();
+              _GM_log(`match words: "${words}", url: ${currUrl}`);
+              const urlPrefix = elem.dataset.url;
+              if (words == null) {
+                const url = new URL(urlPrefix);
+                url.search = "";
+                url.hash = "";
+                url.pathname = "";
+                elem.setAttribute("href", url.toString());
+              } else {
+                elem.setAttribute("href", `${urlPrefix}${words}`);
+              }
+            });
+          }
+        }
         registerJump(shadow);
+        function autoHidePanel() {
+          const currUrl = new URL(window.location.href);
+          const currSearchEngine = searchEngines.find(
+            (it) => {
+              var _a;
+              return (_a = it.regUrl) == null ? void 0 : _a.test(currUrl.toString());
+            }
+          );
+          const keywords = currSearchEngine == null ? void 0 : currSearchEngine.getSearchWord();
+          if (keywords == null) {
+            foldPanel();
+          } else {
+            unfoldPanel();
+          }
+        }
+        setTimeout(() => {
+          autoHidePanel();
+        });
       }
     }
   );
-  const rootElement = document.body.appendChild(
+  document.body.appendChild(
     document.createElement("engine-switch")
   );
-  console.log(rootElement);
-  function createIndexPanel(shadow) {
-    const indexPanel = shadow.appendChild(document.createElement("div"));
-    indexPanel.setAttribute("id", "ivan_search-engine-switch");
-    indexPanel.className = "fixed -left-16 top-1/3 -translate-y-1/2 rounded shadow-lg flex flex-col transition-allbg-sky-100/50 backdrop-blur text-sky-700 dark:bg-sky-800/10 dark:text-sky-500";
-    indexPanel.style.zIndex = "999999";
-    setTimeout(() => {
-      indexPanel.classList.remove("-left-16");
-      indexPanel.classList.add("left-4");
-    });
-    const ol = indexPanel.appendChild(document.createElement("ol"));
-    ol.className = "divide-dotted divide-y divide-sky-300";
-    for (let i = 0; i < searchEngines.length; i++) {
-      const engine = searchEngines[i];
-      {
-        const li = ol.appendChild(document.createElement("li"));
-        li.className = "hover:bg-sky-100 dark:hover:bg-sky-800/20 transition";
-        const a = li.appendChild(document.createElement("a"));
-        a.className = `block px-4 py-2 switch-search-engine ${engine.id} block text-inherit no-underline`;
-        a.dataset.url = engine.url;
-        a.href = "javascript::void(0);";
-        a.text = engine.name;
-      }
-    }
-    const foldBtn = indexPanel.appendChild(document.createElement("button"));
-    foldBtn.className = "absolute -right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full shadow-lg bg-sky-700/50 backdrop-blur text-sky-100 flex items-center justify-center text-xl";
-    const foldBtnIcon = foldBtn.appendChild(document.createElement("span"));
-    foldBtnIcon.className = " pr-0.5 transition";
-    foldBtnIcon.innerHTML = `<svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16.2426 6.34317L14.8284 4.92896L7.75739 12L14.8285 19.0711L16.2427 17.6569L10.5858 12L16.2426 6.34317Z" fill="currentColor"></path></svg>`;
-    foldBtn.onclick = function() {
-      const folded = foldBtnIcon.classList.contains("rotate-180");
-      if (folded) {
-        indexPanel.classList.add("left-4");
-        foldBtnIcon.classList.remove("rotate-180");
-        indexPanel.classList.remove("opacity-50");
-        indexPanel.classList.remove("hover:opacity-100");
-        indexPanel.style.left = "";
-      } else {
-        indexPanel.classList.remove("left-4");
-        indexPanel.classList.add("opacity-50");
-        indexPanel.classList.add("hover:opacity-100");
-        foldBtnIcon.classList.add("rotate-180");
-        const rightBoardPosX = `-${indexPanel.offsetLeft + indexPanel.offsetWidth - 4}px`;
-        indexPanel.style.left = rightBoardPosX;
-      }
-    };
-  }
-  function registerJump(shadow) {
-    const linkElems = shadow.querySelectorAll(
-      ".switch-search-engine"
-    );
-    for (const elem of linkElems) {
-      elem.addEventListener("click", function() {
-        const currUrl = new URL(window.location.href);
-        const currSearchEngine = searchEngines.find(
-          (it) => {
-            var _a;
-            return (_a = it.regUrl) == null ? void 0 : _a.test(currUrl.toString());
-          }
-        );
-        if (!currSearchEngine) {
-          _GM_log(
-            `The current page does not match the preset search engine. url: ${currUrl}`
-          );
-          return;
-        }
-        const words = currSearchEngine.getSearchWord();
-        _GM_log(`match words: "${words}", url: ${currUrl}`);
-        const urlPrefix = elem.dataset.url;
-        elem.setAttribute("href", `${urlPrefix}${words}`);
-      });
-    }
-  }
 
 })();
