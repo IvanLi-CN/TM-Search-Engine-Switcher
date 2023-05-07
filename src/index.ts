@@ -45,7 +45,7 @@ const searchEngines = [
     },
   },
   {
-    id: "sogou.com",
+    id: "sogou",
     name: "搜狗",
     url: "https://www.sogou.com/web?query=",
     regUrl: /www.sogou.com/i,
@@ -127,7 +127,8 @@ function createIndexPanel(shadow: ShadowRoot) {
   const indexPanel = shadow.appendChild(document.createElement("div"));
   indexPanel.setAttribute("id", "ivan_search-engine-switch");
   indexPanel.className =
-    "fixed -left-16 top-1/3 -translate-y-1/2 bg-sky-100/50 backdrop-blur text-sky-700 rounded shadow-lg flex flex-col transition-all";
+    "fixed -left-16 top-1/3 -translate-y-1/2 rounded shadow-lg flex flex-col transition-all" +
+    "bg-sky-100/50 backdrop-blur text-sky-700 dark:bg-sky-800/10 dark:text-sky-500";
   indexPanel.style.zIndex = "999999";
 
   setTimeout(() => {
@@ -143,10 +144,10 @@ function createIndexPanel(shadow: ShadowRoot) {
     const engine = searchEngines[i];
     if (true) {
       const li = ol.appendChild(document.createElement("li"));
-      li.className = "px-4 py-2 hover:bg-sky-100 transition cursor-pointer";
+      li.className = "hover:bg-sky-100 dark:hover:bg-sky-800/20 transition";
 
       const a = li.appendChild(document.createElement("a"));
-      a.className = `switch-search-engine ${engine.id} block text-inherit no-underline`;
+      a.className = `block px-4 py-2 switch-search-engine ${engine.id} block text-inherit no-underline`;
       a.dataset.url = engine.url;
       a.href = "javascript::void(0);";
       a.text = engine.name;

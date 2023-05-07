@@ -7,6 +7,11 @@
 
 ![截图](https://github.com/IvanLi-CN/TM-Search-Engine-Switcher/blob/5cfe15d3726875aa7384609ad9a36a1ebfc7e5f7/docs/asserts/img-1.png?raw=true)
 
+## 功能
+
+- 切换搜索引擎
+- 暗黑模式支持
+
 ## 使用
 
 安装之后就能用了。如果想调整搜索引擎的顺序，可以在脚本中修改 `searchEngines` 数组。
