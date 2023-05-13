@@ -1,13 +1,31 @@
 import { GM_log } from "$";
 import twText from "./index.css?inline";
 
-("use strict");
+type SearchEngine = {
+  id: string;
+  name: string;
+  url: (keywords: string) => string;
+  regUrl: RegExp;
+  getSearchWord: () => string | null;
+};
 
-const searchEngines = [
+const searchEngines: SearchEngine[] = [
+  {
+    id: "v2ex",
+    name: "V2EX",
+    url: (w) => `https://www.google.com/search?q=site:v2ex.com/t%20${w}`,
+    regUrl: /https:\/\/www.google.com\/search\?q=site:v2ex\.com\/t%20/i,
+    getSearchWord: () => {
+      const url = new URL(window.location.href);
+      const q = url.searchParams.get("q");
+      console.log(q, q?.replace("site:v2ex.com/t ", ""));
+      return q?.replace("site:v2ex.com/t ", "") ?? null;
+    },
+  },
   {
     id: "baidu",
     name: "百度搜索",
-    url: "https://www.baidu.com/s?wd=",
+    url: (w) => `https://www.baidu.com/s?wd=${w}`,
     regUrl: /www.baidu.com/i,
     getSearchWord: () => {
       const url = new URL(window.location.href);
@@ -17,7 +35,7 @@ const searchEngines = [
   {
     id: "google",
     name: "Google",
-    url: "https://www.google.com/search?q=",
+    url: (w) => `https://www.google.com/search?q=${w}`,
     regUrl: /www.google.com/i,
     getSearchWord: () => {
       const url = new URL(window.location.href);
@@ -27,7 +45,7 @@ const searchEngines = [
   {
     id: "bing",
     name: "Bing",
-    url: "https://www.bing.com/search?q=",
+    url: (w) => `https://www.bing.com/search?q=${w}`,
     regUrl: /www.bing.com/i,
     getSearchWord: () => {
       const url = new URL(window.location.href);
@@ -37,7 +55,7 @@ const searchEngines = [
   {
     id: "bing-cn",
     name: "必应",
-    url: "https://cn.bing.com/search?q=",
+    url: (w) => `https://cn.bing.com/search?q=${w}`,
     regUrl: /cn.bing.com/i,
     getSearchWord: () => {
       const url = new URL(window.location.href);
@@ -45,19 +63,9 @@ const searchEngines = [
     },
   },
   {
-    id: "sogou",
-    name: "搜狗",
-    url: "https://www.sogou.com/web?query=",
-    regUrl: /www.sogou.com/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("query");
-    },
-  },
-  {
     id: "duckduckgo",
     name: "DuckDuckGo",
-    url: "https://duckduckgo.com/?q=",
+    url: (w) => `https://duckduckgo.com/?q=${w}`,
     regUrl: /duckduckgo.com/i,
     getSearchWord: () => {
       const url = new URL(window.location.href);
@@ -67,7 +75,7 @@ const searchEngines = [
   {
     id: "yandex",
     name: "Yandex",
-    url: "https://yandex.com/search/?text=",
+    url: (w) => `https://yandex.com/search/?text=${w}`,
     regUrl: /yandex.com/i,
     getSearchWord: () => {
       const url = new URL(window.location.href);
@@ -75,9 +83,60 @@ const searchEngines = [
     },
   },
   {
+    id: "sogou",
+    name: "搜狗",
+    url: (w) => `https://www.sogou.com/web?query=${w}`,
+    regUrl: /www.sogou.com/i,
+    getSearchWord: () => {
+      const url = new URL(window.location.href);
+      return url.searchParams.get("query");
+    },
+  },
+  {
+    id: "github",
+    name: "GitHub",
+    url: (w) =>
+      `https://github.com/search?q=${w}&ref=opensearch&type=repositories`,
+    regUrl: /github.com/i,
+    getSearchWord: () => {
+      const url = new URL(window.location.href);
+      return url.searchParams.get("q");
+    },
+  },
+  {
+    id: "taobao",
+    name: "淘宝",
+    url: (w) => `https://s.taobao.com/search?q=${w}`,
+    regUrl: /s.taobao.com/i,
+    getSearchWord: () => {
+      const url = new URL(window.location.href);
+      return url.searchParams.get("q");
+    },
+  },
+  {
+    id: "npm",
+    name: "NPM",
+    url: (w) => `https://www.npmjs.com/search?q=${w}`,
+    regUrl: /www.npmjs.com/i,
+    getSearchWord: () => {
+      const url = new URL(window.location.href);
+      return url.searchParams.get("q");
+    },
+  },
+  {
+    id: "Crate",
+    name: "Crate",
+    url: (w) => `https://crates.io/search?q=${w}`,
+    regUrl: /crates.io/i,
+    getSearchWord: () => {
+      const url = new URL(window.location.href);
+      return url.searchParams.get("q");
+    },
+  },
+  {
     id: "zhihu",
     name: "知乎",
-    url: "https://www.zhihu.com/search?q=",
+    url: (w) => `https://www.zhihu.com/search?q=${w}`,
     regUrl: /www.zhihu.com/i,
     getSearchWord: () => {
       const url = new URL(window.location.href);
@@ -87,7 +146,7 @@ const searchEngines = [
   {
     id: "bilibili",
     name: "哔哩哔哩",
-    url: "http://search.bilibili.com/all?keyword=",
+    url: (w) => `http://search.bilibili.com/all?keyword=${w}`,
     regUrl: /search.bilibili.com/i,
     getSearchWord: () => {
       const url = new URL(window.location.href);
@@ -136,7 +195,7 @@ customElements.define(
 
             const a = li.appendChild(document.createElement("a"));
             a.className = `block px-4 py-2 switch-search-engine ${engine.id} block text-inherit no-underline`;
-            a.dataset.url = engine.url;
+            a.dataset.engineId = engine.id;
             a.href = "javascript::void(0);";
             a.text = engine.name;
           }
@@ -154,11 +213,12 @@ customElements.define(
         foldBtnIcon.innerHTML = `<svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16.2426 6.34317L14.8284 4.92896L7.75739 12L14.8285 19.0711L16.2427 17.6569L10.5858 12L16.2426 6.34317Z" fill="currentColor"></path></svg>`;
 
         foldBtn.onclick = function () {
+          console.log("click");
           const folded = foldBtnIcon.classList.contains("rotate-180");
           if (folded) {
-            foldPanel();
-          } else {
             unfoldPanel();
+          } else {
+            foldPanel();
           }
         };
 
@@ -213,15 +273,19 @@ customElements.define(
             const words = currSearchEngine.getSearchWord();
             GM_log(`match words: "${words}", url: ${currUrl}`);
 
-            const urlPrefix = elem.dataset.url!;
+            const engineId = elem.dataset.engineId!;
+            const targetEngine = searchEngines.find(
+              (it) => it.id === engineId
+            )!;
+
             if (words == null) {
-              const url = new URL(urlPrefix);
+              const url = new URL(targetEngine.url(""));
               url.search = "";
               url.hash = "";
               url.pathname = "";
               elem.setAttribute("href", url.toString());
             } else {
-              elem.setAttribute("href", `${urlPrefix}${words}`);
+              elem.setAttribute("href", targetEngine.url(words));
             }
           });
         }
