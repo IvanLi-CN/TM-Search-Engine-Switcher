@@ -1,7 +1,5 @@
-module.exports = {
-  plugins: {
-    tailwindcss: {},
-    "@thedutchcoder/postcss-rem-to-px": {},
-    autoprefixer: {},
-  },
+export const plugins = {
+  tailwindcss: {},
+  "@thedutchcoder/postcss-rem-to-px": {},
+  autoprefixer: {},
 };

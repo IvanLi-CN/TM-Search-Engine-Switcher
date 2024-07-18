@@ -34,10 +34,10 @@
   "json": { "formatter": { "trailingCommas": "none" } },
   "files": {
     "ignore": [
-      "**/node_modules/**/*",
-      "**/build/**/*",
-      "**/dist/**/*",
-      "**/public/**/*"
+      "**/node_modules",
+      "**/build",
+      "**/dist",
+      "**/public"
     ],
     "ignoreUnknown": true
   },
