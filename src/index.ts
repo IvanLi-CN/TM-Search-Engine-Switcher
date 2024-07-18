@@ -203,7 +203,7 @@ customElements.define(
 
         // fold
         const foldBtn = indexPanel.appendChild(
-          document.createElement("button")
+          document.createElement("button"),
         );
         foldBtn.className =
           "absolute -right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full shadow-lg bg-sky-700/50 backdrop-blur text-sky-100 flex items-center justify-center text-xl";
@@ -212,7 +212,7 @@ customElements.define(
         foldBtnIcon.className = " pr-0.5 transition";
         foldBtnIcon.innerHTML = `<svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16.2426 6.34317L14.8284 4.92896L7.75739 12L14.8285 19.0711L16.2427 17.6569L10.5858 12L16.2426 6.34317Z" fill="currentColor"></path></svg>`;
 
-        foldBtn.onclick = function () {
+        foldBtn.onclick = () => {
           console.log("click");
           const folded = foldBtnIcon.classList.contains("rotate-180");
           if (folded) {
@@ -254,18 +254,18 @@ customElements.define(
       // Register Event Handlers for Jump
       function registerJump(shadow: ShadowRoot) {
         const linkElems = shadow.querySelectorAll<HTMLElement>(
-          ".switch-search-engine"
+          ".switch-search-engine",
         );
         for (const elem of linkElems) {
-          elem.addEventListener("click", function () {
+          elem.addEventListener("click", () => {
             const currUrl = new URL(window.location.href);
             const currSearchEngine = searchEngines.find((it) =>
-              it.regUrl?.test(currUrl.toString())
+              it.regUrl?.test(currUrl.toString()),
             );
 
             if (!currSearchEngine) {
               GM_log(
-                `The current page does not match the preset search engine. url: ${currUrl}`
+                `The current page does not match the preset search engine. url: ${currUrl}`,
               );
               return;
             }
@@ -275,7 +275,7 @@ customElements.define(
 
             const engineId = elem.dataset.engineId!;
             const targetEngine = searchEngines.find(
-              (it) => it.id === engineId
+              (it) => it.id === engineId,
             )!;
 
             if (words == null) {
@@ -297,7 +297,7 @@ customElements.define(
       function autoHidePanel() {
         const currUrl = new URL(window.location.href);
         const currSearchEngine = searchEngines.find((it) =>
-          it.regUrl?.test(currUrl.toString())
+          it.regUrl?.test(currUrl.toString()),
         );
 
         const keywords = currSearchEngine?.getSearchWord();
@@ -313,11 +313,20 @@ customElements.define(
         autoHidePanel();
       });
     }
+  },
+);
+
+document.body.appendChild(document.createElement("engine-switch"));
+
+const observer = new MutationObserver((mutations) => {
+  for (const mutation of mutations) {
+    if (mutation.type === "childList") {
+      if (!document.getElementsByTagName("engine-switch").length) {
+        document.body.appendChild(document.createElement("engine-switch"));
+        break;
+      }
+    }
   }
-);
+});
 
-const rootElement = document.body.appendChild(
-  document.createElement("engine-switch")
-);
-
-
+observer.observe(document.body, { childList: true, subtree: true });

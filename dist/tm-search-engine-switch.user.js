@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         搜索引擎切换 - Search Engine Switcher
 // @namespace    https://ivanli.cc/
-// @version      1.2.0
+// @version      1.3.0
 // @author       Ivan Li
 // @description  A userscript to switch search engine with current keywords.
 // @license      MIT
 // @icon         data:image/svg+xml;base64,PHN2ZyBzdHJva2U9ImN1cnJlbnRDb2xvciIgZmlsbD0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgaGVpZ2h0PSIxZW0iIHdpZHRoPSIxZW0iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjIiIGQ9Ik0xNSwxNiBMMjEsMjIgTDE1LDE2IFogTTEwLDE4IEMxMy44NjU5OTMyLDE4IDE3LDE0Ljg2NTk5MzIgMTcsMTEgQzE3LDcuMTM0MDA2NzUgMTMuODY1OTkzMiw0IDEwLDQgQzYuMTM0MDA2NzUsNCAzLDcuMTM0MDA2NzUgMywxMSBDMywxNC44NjU5OTMyIDYuMTM0MDA2NzUsMTggMTAsMTggWiBNMjAsMSBMMjAsNyBNMTcsNCBMMjMsNCI+PC9wYXRoPjwvc3ZnPg==
+// @source       https://github.com/IvanLi-CN/TM-Search-Engine-Switcher
 // @match        *://www.baidu.com/*
 // @match        *://www.google.com/*
 // @match        *://www.google.com.hk/*
@@ -212,7 +213,7 @@
           const foldBtnIcon2 = foldBtn.appendChild(document.createElement("span"));
           foldBtnIcon2.className = " pr-0.5 transition";
           foldBtnIcon2.innerHTML = `<svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16.2426 6.34317L14.8284 4.92896L7.75739 12L14.8285 19.0711L16.2427 17.6569L10.5858 12L16.2426 6.34317Z" fill="currentColor"></path></svg>`;
-          foldBtn.onclick = function() {
+          foldBtn.onclick = () => {
             console.log("click");
             const folded = foldBtnIcon2.classList.contains("rotate-180");
             if (folded) {
@@ -248,7 +249,7 @@
             ".switch-search-engine"
           );
           for (const elem of linkElems) {
-            elem.addEventListener("click", function() {
+            elem.addEventListener("click", () => {
               const currUrl = new URL(window.location.href);
               const currSearchEngine = searchEngines.find(
                 (it) => {
@@ -302,8 +303,17 @@
       }
     }
   );
-  document.body.appendChild(
-    document.createElement("engine-switch")
-  );
+  document.body.appendChild(document.createElement("engine-switch"));
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.type === "childList") {
+        if (!document.getElementsByTagName("engine-switch").length) {
+          document.body.appendChild(document.createElement("engine-switch"));
+          break;
+        }
+      }
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
 
 })();
