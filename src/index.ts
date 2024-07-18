@@ -10,149 +10,169 @@ type SearchEngine = {
 };
 
 const searchEngines: SearchEngine[] = [
-  {
-    id: "v2ex",
-    name: "V2EX",
-    url: (w) => `https://www.google.com/search?q=site:v2ex.com/t%20${w}`,
-    regUrl: /https:\/\/www.google.com\/search\?q=site:v2ex\.com\/t%20/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      const q = url.searchParams.get("q");
-      console.log(q, q?.replace("site:v2ex.com/t ", ""));
-      return q?.replace("site:v2ex.com/t ", "") ?? null;
-    },
-  },
-  {
-    id: "baidu",
-    name: "百度搜索",
-    url: (w) => `https://www.baidu.com/s?wd=${w}`,
-    regUrl: /www.baidu.com/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("wd");
-    },
-  },
-  {
-    id: "google",
-    name: "Google",
-    url: (w) => `https://www.google.com/search?q=${w}`,
-    regUrl: /www.google.com/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("q");
-    },
-  },
-  {
-    id: "bing",
-    name: "Bing",
-    url: (w) => `https://www.bing.com/search?q=${w}`,
-    regUrl: /www.bing.com/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("q");
-    },
-  },
-  {
-    id: "bing-cn",
-    name: "必应",
-    url: (w) => `https://cn.bing.com/search?q=${w}`,
-    regUrl: /cn.bing.com/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("q");
-    },
-  },
-  {
-    id: "duckduckgo",
-    name: "DuckDuckGo",
-    url: (w) => `https://duckduckgo.com/?q=${w}`,
-    regUrl: /duckduckgo.com/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("q");
-    },
-  },
-  {
-    id: "yandex",
-    name: "Yandex",
-    url: (w) => `https://yandex.com/search/?text=${w}`,
-    regUrl: /yandex.com/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("text");
-    },
-  },
-  {
-    id: "sogou",
-    name: "搜狗",
-    url: (w) => `https://www.sogou.com/web?query=${w}`,
-    regUrl: /www.sogou.com/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("query");
-    },
-  },
-  {
-    id: "github",
-    name: "GitHub",
-    url: (w) =>
-      `https://github.com/search?q=${w}&ref=opensearch&type=repositories`,
-    regUrl: /github.com/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("q");
-    },
-  },
-  {
-    id: "taobao",
-    name: "淘宝",
-    url: (w) => `https://s.taobao.com/search?q=${w}`,
-    regUrl: /s.taobao.com/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("q");
-    },
-  },
-  {
-    id: "npm",
-    name: "NPM",
-    url: (w) => `https://www.npmjs.com/search?q=${w}`,
-    regUrl: /www.npmjs.com/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("q");
-    },
-  },
-  {
-    id: "Crate",
-    name: "Crate",
-    url: (w) => `https://crates.io/search?q=${w}`,
-    regUrl: /crates.io/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("q");
-    },
-  },
-  {
-    id: "zhihu",
-    name: "知乎",
-    url: (w) => `https://www.zhihu.com/search?q=${w}`,
-    regUrl: /www.zhihu.com/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("q");
-    },
-  },
-  {
-    id: "bilibili",
-    name: "哔哩哔哩",
-    url: (w) => `http://search.bilibili.com/all?keyword=${w}`,
-    regUrl: /search.bilibili.com/i,
-    getSearchWord: () => {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("keyword");
-    },
-  },
+	{
+		id: "v2ex",
+		name: "V2EX",
+		url: (w) => `https://www.google.com/search?q=site:v2ex.com/t%20${w}`,
+		regUrl: /https:\/\/www.google.com\/search\?q=site:v2ex\.com\/t%20/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			const q = url.searchParams.get("q");
+			console.log(q, q?.replace("site:v2ex.com/t ", ""));
+			return q?.replace("site:v2ex.com/t ", "") ?? null;
+		},
+	},
+	{
+		id: "baidu",
+		name: "百度搜索",
+		url: (w) => `https://www.baidu.com/s?wd=${w}`,
+		regUrl: /www.baidu.com/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("wd");
+		},
+	},
+	{
+		id: "google",
+		name: "Google",
+		url: (w) => `https://www.google.com/search?q=${w}`,
+		regUrl: /www.google.com/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("q");
+		},
+	},
+	{
+		id: "bing",
+		name: "Bing",
+		url: (w) => `https://www.bing.com/search?q=${w}`,
+		regUrl: /www.bing.com/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("q");
+		},
+	},
+	{
+		id: "bing-cn",
+		name: "必应",
+		url: (w) => `https://cn.bing.com/search?q=${w}`,
+		regUrl: /cn.bing.com/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("q");
+		},
+	},
+	{
+		id: "duckduckgo",
+		name: "DuckDuckGo",
+		url: (w) => `https://duckduckgo.com/?q=${w}`,
+		regUrl: /duckduckgo.com/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("q");
+		},
+	},
+	{
+		id: "yandex",
+		name: "Yandex",
+		url: (w) => `https://yandex.com/search/?text=${w}`,
+		regUrl: /yandex.com/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("text");
+		},
+	},
+	{
+		id: "sogou",
+		name: "搜狗",
+		url: (w) => `https://www.sogou.com/web?query=${w}`,
+		regUrl: /www.sogou.com/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("query");
+		},
+	},
+	{
+		id: "github",
+		name: "GitHub",
+		url: (w) =>
+			`https://github.com/search?q=${w}&ref=opensearch&type=repositories`,
+		regUrl: /github.com/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("q");
+		},
+	},
+	{
+		id: "taobao",
+		name: "淘宝",
+		url: (w) => `https://s.taobao.com/search?q=${w}`,
+		regUrl: /s.taobao.com/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("q");
+		},
+	},
+	{
+		id: "npm",
+		name: "NPM",
+		url: (w) => `https://www.npmjs.com/search?q=${w}`,
+		regUrl: /www.npmjs.com/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("q");
+		},
+	},
+	{
+		id: "Crate",
+		name: "Crate",
+		url: (w) => `https://crates.io/search?q=${w}`,
+		regUrl: /crates.io/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("q");
+		},
+	},
+	{
+		id: "zhihu",
+		name: "知乎",
+		url: (w) => `https://www.zhihu.com/search?q=${w}`,
+		regUrl: /www.zhihu.com/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("q");
+		},
+	},
+	{
+		id: "bilibili",
+		name: "哔哩哔哩",
+		url: (w) => `http://search.bilibili.com/all?keyword=${w}`,
+		regUrl: /search.bilibili.com/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("keyword");
+		},
+	},
+	{
+		id: "quora",
+		name: "Quora",
+		url: (w) => `https://www.quora.com/search?q=${w}`,
+		regUrl: /(?:www\.)?quora\.com\/search/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("q");
+		},
+	},
+	{
+		id: "reddit",
+		name: "Reddit",
+		url: (w) => `https://www.reddit.com/search/?q=${w}`,
+		regUrl: /(?:www\.)?reddit\.com\/search/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			return url.searchParams.get("q");
+		},
+	},
 ];
 
 customElements.define(

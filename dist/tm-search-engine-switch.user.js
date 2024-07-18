@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         搜索引擎切换 - Search Engine Switcher
 // @namespace    https://ivanli.cc/
-// @version      1.3.0
+// @version      1.2.1
 // @author       Ivan Li
 // @description  A userscript to switch search engine with current keywords.
 // @license      MIT
@@ -23,6 +23,10 @@
 // @match        *://crates.io/*
 // @match        *://npmjs.com/*
 // @match        *://www.npmjs.com/*
+// @match        *://www.quora.com/search*
+// @match        *://quora.com/search*
+// @match        *://www.reddit.com/search*
+// @match        *://reddit.com/search*
 // @grant        GM_log
 // ==/UserScript==
 
@@ -172,6 +176,26 @@
       getSearchWord: () => {
         const url = new URL(window.location.href);
         return url.searchParams.get("keyword");
+      }
+    },
+    {
+      id: "quora",
+      name: "Quora",
+      url: (w) => `https://www.quora.com/search?q=${w}`,
+      regUrl: /(?:www\.)?quora\.com\/search/i,
+      getSearchWord: () => {
+        const url = new URL(window.location.href);
+        return url.searchParams.get("q");
+      }
+    },
+    {
+      id: "reddit",
+      name: "Reddit",
+      url: (w) => `https://www.reddit.com/search/?q=${w}`,
+      regUrl: /(?:www\.)?reddit\.com\/search/i,
+      getSearchWord: () => {
+        const url = new URL(window.location.href);
+        return url.searchParams.get("q");
       }
     }
   ];
