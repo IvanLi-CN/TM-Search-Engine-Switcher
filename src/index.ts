@@ -18,7 +18,6 @@ const searchEngines: SearchEngine[] = [
 		getSearchWord: () => {
 			const url = new URL(window.location.href);
 			const q = url.searchParams.get("q");
-			console.log(q, q?.replace("site:v2ex.com/t ", ""));
 			return q?.replace("site:v2ex.com/t ", "") ?? null;
 		},
 	},
@@ -101,6 +100,17 @@ const searchEngines: SearchEngine[] = [
 		getSearchWord: () => {
 			const url = new URL(window.location.href);
 			return url.searchParams.get("q");
+		},
+	},
+	{
+		id: "oshwhub",
+		name: "OSHW Hub",
+		url: (w) => `https://www.google.com/search?q=site:oshwhub.com/t%20${w}`,
+		regUrl: /https:\/\/www.google.com\/search\?q=site:oshwhub\.com\/t%20/i,
+		getSearchWord: () => {
+			const url = new URL(window.location.href);
+			const q = url.searchParams.get("q");
+			return q?.replace("site:oshwhub.com/t ", "") ?? null;
 		},
 	},
 	{

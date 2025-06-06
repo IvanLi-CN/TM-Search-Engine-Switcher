@@ -38,7 +38,7 @@ export default defineConfig({
         author: "Ivan Li",
         description:
           "A userscript to switch search engine with current keywords.",
-        version: "1.3.1",
+        version: "1.3.2",
         source: "https://github.com/IvanLi-CN/TM-Search-Engine-Switcher",
       },
     }),

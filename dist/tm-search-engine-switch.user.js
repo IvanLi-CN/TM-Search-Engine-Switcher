@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         搜索引擎切换 - Search Engine Switcher
 // @namespace    https://ivanli.cc/
-// @version      1.3.1
+// @version      1.3.2
 // @author       Ivan Li
 // @description  A userscript to switch search engine with current keywords.
 // @license      MIT
@@ -44,7 +44,6 @@
       getSearchWord: () => {
         const url = new URL(window.location.href);
         const q = url.searchParams.get("q");
-        console.log(q, q == null ? void 0 : q.replace("site:v2ex.com/t ", ""));
         return (q == null ? void 0 : q.replace("site:v2ex.com/t ", "")) ?? null;
       }
     },
@@ -126,6 +125,17 @@
       getSearchWord: () => {
         const url = new URL(window.location.href);
         return url.searchParams.get("q");
+      }
+    },
+    {
+      id: "oshwhub",
+      name: "OSHW Hub",
+      url: (w) => `https://www.google.com/search?q=site:oshwhub.com/t%20${w}`,
+      regUrl: /https:\/\/www.google.com\/search\?q=site:oshwhub\.com\/t%20/i,
+      getSearchWord: () => {
+        const url = new URL(window.location.href);
+        const q = url.searchParams.get("q");
+        return (q == null ? void 0 : q.replace("site:oshwhub.com/t ", "")) ?? null;
       }
     },
     {
