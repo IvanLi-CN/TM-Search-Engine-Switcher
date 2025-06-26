@@ -105,12 +105,12 @@ const searchEngines: SearchEngine[] = [
 	{
 		id: "oshwhub",
 		name: "OSHW Hub",
-		url: (w) => `https://www.google.com/search?q=site:oshwhub.com/t%20${w}`,
-		regUrl: /https:\/\/www.google.com\/search\?q=site:oshwhub\.com\/t%20/i,
+		url: (w) => `https://www.google.com/search?q=site:oshwhub.com%20${w}`,
+		regUrl: /https:\/\/www.google.com\/search\?q=site:oshwhub\.com\%20/i,
 		getSearchWord: () => {
 			const url = new URL(window.location.href);
 			const q = url.searchParams.get("q");
-			return q?.replace("site:oshwhub.com/t ", "") ?? null;
+			return q?.replace("site:oshwhub.com ", "") ?? null;
 		},
 	},
 	{
